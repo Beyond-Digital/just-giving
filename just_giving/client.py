@@ -93,12 +93,12 @@ class FundraisingAPIClient(BaseAPIClient):
             page_short_name)
         return self.get().text
 
-    def get_fundraising_page_donations(self, email, password, page_short_name ):
+    def get_fundraising_page_donations(self, email, password, page_short_name, page_num = 1):
         if password:
             self.build_authentication(email, password)
 
-        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations'.format(
-            page_short_name)
+        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations?pageNum={1}'.format(
+            page_short_name, page_num)
         return self.get().text
 
 
@@ -112,4 +112,4 @@ if __name__ == '__main__':
     # SAMPLE GET fundraising page deatils
     # print j.fundraising.get_fundraising_page_details('micwong')
     # SAMPLE read donations on one particalar page
-    print j.fundraising.get_fundraising_page_donations('mwhwong@gmail.com', '', 'micwong')
+    print j.fundraising.get_fundraising_page_donations('mwhwong@gmail.com', '', 'micwong', 2)
