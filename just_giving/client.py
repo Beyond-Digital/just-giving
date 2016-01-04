@@ -97,12 +97,12 @@ class FundraisingAPIClient(BaseAPIClient):
         return self.get().text
 
     # If email and password not set, retunrs public data only
-    def get_fundraising_page_donations(self, page_short_name, page_num=1, email=None, password=None):
+    def get_fundraising_page_donations(self, page_short_name, page_num=1, page_size=25, email=None, password=None):
         if email and password:
             self.build_authentication(email, password)
 
-        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations?pageNum={1}'.format(
-            page_short_name, page_num)
+        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations?pageNum={1}&pageSize={2}'.format(
+            page_short_name, page_num, page_size)
         return self.get().text
 
     def fundraising_page_url_check(self, page_short_name):
@@ -119,8 +119,9 @@ if __name__ == '__main__':
     # SAMPLE GET fundraising page
     # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
     # SAMPLE GET fundraising page deatils
-    print j.fundraising.get_fundraising_page_details('micwong')
-    # SAMPLE read donations on one particalar page
-    print j.fundraising.get_fundraising_page_donations('micwong', 2)
+    print j.fundraising.get_fundraising_page_details('Nicholas-Jones16')
+    # SAMPLE read donations on one particalar page, with page size of 150
+    # result
+    print j.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150)
     # Check if justgiving donation page exist
-    print j.fundraising.fundraising_page_url_check('micwong')
+    # print j.fundraising.fundraising_page_url_check('micwong')
