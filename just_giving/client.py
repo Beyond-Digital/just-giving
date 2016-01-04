@@ -13,8 +13,8 @@ class JustGivingAPI(object):
 
 
 class BaseAPIClient(object):
-    # 'https://api.justgiving.com' live url
-    base_url = 'https://api.sandbox.justgiving.com'  # sandbox url
+    base_url = 'https://api.justgiving.com' #live url
+    # base_url = 'https://api.sandbox.justgiving.com'  # sandbox url
     api_key = None
     api_version = 'v1'
     api_endpoint = None
@@ -93,8 +93,10 @@ class FundraisingAPIClient(BaseAPIClient):
             page_short_name)
         return self.get().text
 
-    def get_fundraising_page_donations(self, email, password, page_short_name):
-        self.build_authentication(email, password)
+    def get_fundraising_page_donations(self, email, password, page_short_name ):
+        if password:
+            self.build_authentication(email, password)
+
         self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations'.format(
             page_short_name)
         return self.get().text
@@ -104,10 +106,10 @@ if __name__ == '__main__':
     appID = '196e4994'
     j = JustGivingAPI(appID)
     # SAMPLE Check if test account exist
-    print j.account.validate('ching.leung@bynd.com', 'oaktree99')
+    # print j.account.validate('ching.leung@bynd.com', 'oaktree99')
     # SAMPLE GET fundraising page
-    print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
+    # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
     # SAMPLE GET fundraising page deatils
-    print j.fundraising.get_fundraising_page_details('byndtesting')
+    # print j.fundraising.get_fundraising_page_details('micwong')
     # SAMPLE read donations on one particalar page
-    print j.fundraising.get_fundraising_page_donations('ching.leung@bynd.com', 'oaktree99', 'byndtesting')
+    print j.fundraising.get_fundraising_page_donations('mwhwong@gmail.com', '', 'micwong')
