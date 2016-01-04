@@ -99,15 +99,15 @@ class FundraisingAPIClient(BaseAPIClient):
             page_short_name)
         return self.get().text
 
-appID = '196e4994'
-j = JustGivingAPI(appID)
-# SAMPLE Check if test account exist
-print j.account.validate('ching.leung@bynd.com', 'oaktree99')
-# SAMPLE GET fundraising page
-print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
-# SAMPLE GET fundraising page deatils
-print j.fundraising.get_fundraising_page_details('byndtesting')
-# SAMPLE read donations on one particalar page
-print j.fundraising.get_fundraising_page_donations('ching.leung@bynd.com', 'oaktree99', 'byndtesting')
 
-
+if __name__ == '__main__':
+    appID = '196e4994'
+    j = JustGivingAPI(appID)
+    # SAMPLE Check if test account exist
+    print j.account.validate('ching.leung@bynd.com', 'oaktree99')
+    # SAMPLE GET fundraising page
+    print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
+    # SAMPLE GET fundraising page deatils
+    print j.fundraising.get_fundraising_page_details('byndtesting')
+    # SAMPLE read donations on one particalar page
+    print j.fundraising.get_fundraising_page_donations('ching.leung@bynd.com', 'oaktree99', 'byndtesting')
