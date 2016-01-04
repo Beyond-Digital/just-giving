@@ -93,7 +93,7 @@ class FundraisingAPIClient(BaseAPIClient):
             page_short_name)
         return self.get().text
 
-    def get_fundraising_page_donations(self, email, password, page_short_name ):
+    def get_fundraising_page_donations(self, email, password, page_short_name):
         self.build_authentication(email, password)
         self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations'.format(
             page_short_name)
