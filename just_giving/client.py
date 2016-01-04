@@ -13,7 +13,7 @@ class JustGivingAPI(object):
 
 
 class BaseAPIClient(object):
-    base_url = 'https://api.justgiving.com' #live url
+    base_url = 'https://api.justgiving.com'  # live url
     # base_url = 'https://api.sandbox.justgiving.com'  # sandbox url
     api_key = None
     api_version = 'v1'
@@ -57,6 +57,9 @@ class BaseAPIClient(object):
         return requests.post(self.build_url(),
                              headers=self.headers, data=json.dumps(data))
 
+    def head(self):
+        return requests.head(self.build_url(), headers=self.headers)
+
 
 class AccountAPIClient(BaseAPIClient):
 
@@ -93,14 +96,20 @@ class FundraisingAPIClient(BaseAPIClient):
             page_short_name)
         return self.get().text
 
-    def get_fundraising_page_donations(self, email, password, page_short_name, page_num = 1):
-        if password:
+    # If email and password not set, retunrs public data only
+    def get_fundraising_page_donations(self, page_short_name, page_num=1, email=None, password=None):
+        if email and password:
             self.build_authentication(email, password)
 
         self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations?pageNum={1}'.format(
             page_short_name, page_num)
         return self.get().text
 
+    def fundraising_page_url_check(self, page_short_name):
+
+        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}'.format(
+            page_short_name)
+        return self.head()
 
 if __name__ == '__main__':
     appID = '196e4994'
@@ -110,6 +119,8 @@ if __name__ == '__main__':
     # SAMPLE GET fundraising page
     # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
     # SAMPLE GET fundraising page deatils
-    # print j.fundraising.get_fundraising_page_details('micwong')
+    print j.fundraising.get_fundraising_page_details('micwong')
     # SAMPLE read donations on one particalar page
-    print j.fundraising.get_fundraising_page_donations('mwhwong@gmail.com', '', 'micwong', 2)
+    print j.fundraising.get_fundraising_page_donations('micwong', 2)
+    # Check if justgiving donation page exist
+    print j.fundraising.fundraising_page_url_check('micwong')
