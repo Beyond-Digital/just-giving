@@ -5,15 +5,13 @@ import base64
 class JustGivingAPI(object):
     api_id = None
 
-    def __init__(self, appId):
-        self.account = AccountAPIClient(appId)
-        self.fundraising = FundraisingAPIClient(appId)
-        # api_object.retrieve_acount
+    def __init__(self, appId, sandbox=False):
+        self.account = AccountAPIClient(appId, sandbox=sandbox)
+        self.fundraising = FundraisingAPIClient(appId, sandbox=sandbox)
 
 
 class BaseAPIClient(object):
-    base_url = 'https://api.justgiving.com/'  # live url
-    # base_url = 'https://api.sandbox.justgiving.com'  # sandbox url
+    base_url = 'https://api.justgiving.com'
     api_key = None
     api_version = 'v1'
     api_endpoint = None
@@ -21,9 +19,13 @@ class BaseAPIClient(object):
     headers = None
     content_type = None
 
-    def __init__(self, api_key):
+    def __init__(self, api_key, sandbox=False):
         self.api_key = api_key
         self.set_header()
+
+        if sandbox:
+            self.base_url = 'https://api.sandbox.justgiving.com'
+
 
     def build_url(self):
         return '{0}/{1}/{2}/{3}'.format(
@@ -117,15 +119,16 @@ class FundraisingAPIClient(BaseAPIClient):
 if __name__ == '__main__':
     from pprint import pprint
     appID = '196e4994'
-    j = JustGivingAPI(appID)
+    live_client = JustGivingAPI(appID)
+    sandbox_client = JustGivingAPI(appID, sandbox=True)
     # SAMPLE Check if test account exist
-    pprint(j.account.validate('ching.leung@bynd.com', 'oaktree99'))
+    pprint(live_client.account.validate('ching.leung@bynd.com', 'oaktree99'))
     # SAMPLE GET fundraising page
-    # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')  # noqa
+    pprint(sandbox_client.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99'))  # noqa
     # SAMPLE GET fundraising page deatils
-    # pprint(j.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
+    pprint(sandbox_client.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
     # SAMPLE read donations on one particalar page, with page size of 150
     # result
-    # pprint(j.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
+    pprint(sandbox_client.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
     # Check if justgiving donation page exist
-    # print j.fundraising.fundraising_page_url_check('micwong')
+    pprint(sandbox_client.fundraising.fundraising_page_url_check('micwong'))
