@@ -3,7 +3,7 @@ import base64
 
 
 class JustGivingAPI(object):
-    apiId = None
+    api_id = None
 
     def __init__(self, appId):
         self.account = AccountAPIClient(appId)
