@@ -124,20 +124,3 @@ class FundraisingAPIClient(BaseAPIClient):
         else:
             response.raise_for_status()
             return True
-
-if __name__ == '__main__':
-    from pprint import pprint
-    appID = '196e4994'
-    live_client = JustGivingAPI(appID)
-    sandbox_client = JustGivingAPI(appID, sandbox=True)
-    # SAMPLE Check if test account exist
-    pprint(live_client.account.validate('ching.leung@bynd.com', 'oaktree99'))
-    # SAMPLE GET fundraising page
-    pprint(sandbox_client.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99'))  # noqa
-    # SAMPLE GET fundraising page deatils
-    pprint(live_client.fundraising.get_fundraising_page_details('Nicholas-Jones16'))  # noqa
-    # SAMPLE read donations on one particalar page, with page size of 150
-    # result
-    pprint(live_client.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
-    # Check if justgiving donation page exist
-    pprint(live_client.fundraising.fundraising_page_url_check('micwonglololol'))
