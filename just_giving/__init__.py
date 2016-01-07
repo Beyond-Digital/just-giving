@@ -5,9 +5,9 @@ import base64
 class JustGivingAPI(object):
     api_id = None
 
-    def __init__(self, appId, sandbox=False):
-        self.account = AccountAPIClient(appId, sandbox=sandbox)
-        self.fundraising = FundraisingAPIClient(appId, sandbox=sandbox)
+    def __init__(self, app_id, sandbox=False):
+        self.account = AccountAPIClient(app_id, sandbox=sandbox)
+        self.fundraising = FundraisingAPIClient(app_id, sandbox=sandbox)
 
 
 class BaseAPIClient(object):
