@@ -21,10 +21,9 @@ class BaseAPIClient(object):
     headers = None
     content_type = None
 
-    def __init__(self, api_key, content_type='JSON'):
+    def __init__(self, api_key):
         self.api_key = api_key
-        self.content_type = content_type
-        self.set_header(content_type)
+        self.set_header()
 
     def build_url(self):
         return '{0}/{1}/{2}/{3}'.format(
@@ -37,20 +36,14 @@ class BaseAPIClient(object):
     def build_authentication(self, email, password):
         code = "{0}:{1}".format(email, password)
         self.authentication_code = base64.b64encode(code)
-        self.set_header(self.content_type)
+        self.set_header()
 
-    def set_header(self, content_type):
-        if content_type == 'JSON':
-            content_text = 'application/json'
-        else:
-            content_text = 'text/xml'
+    def set_header(self):
+        headers = {
+            'Content-Type': 'application/json',
+        }
         if self.authentication_code:
-            headers = {
-                'Content-Type': content_text,
-                'Authorization': 'Basic ' + self.authentication_code
-            }
-        else:
-            headers = {'Content-Type': content_text}
+            headers['Authorization'] = 'Basic ' + self.authentication_code
         self.headers = headers
 
     def get(self):
@@ -105,12 +98,10 @@ class FundraisingAPIClient(BaseAPIClient):
         return self.get()
 
     # If email and password not set, retunrs public data only
-    def get_fundraising_page_donations(
-        self,
-        page_name, page_num=1, page_size=25, email=None, password=None
-    ):
+    def get_fundraising_page_donations(self, page_name, page_num=1, page_size=25, email=None, password=None):  # noqa
         if email and password:
             self.build_authentication(email, password)
+
         query_string = 'pageNum={0}&pageSize={1}'.format(page_num, page_size)
         self.api_endpoint = 'fundraising/pages/{0}/donations?{1}'.format(
             page_name,
