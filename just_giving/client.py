@@ -2,10 +2,6 @@ import requests
 import base64
 
 
-class PageShortNameFound(Exception):
-    pass
-
-
 class JustGivingAPI(object):
     api_id = None
 
