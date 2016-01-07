@@ -26,7 +26,6 @@ class BaseAPIClient(object):
         if sandbox:
             self.base_url = 'https://api.sandbox.justgiving.com'
 
-
     def build_url(self):
         return '{0}/{1}/{2}/{3}'.format(
             self.base_url,
@@ -126,9 +125,9 @@ if __name__ == '__main__':
     # SAMPLE GET fundraising page
     pprint(sandbox_client.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99'))  # noqa
     # SAMPLE GET fundraising page deatils
-    pprint(sandbox_client.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
+    pprint(live_client.fundraising.get_fundraising_page_details('Nicholas-Jones16'))  # noqa
     # SAMPLE read donations on one particalar page, with page size of 150
     # result
-    pprint(sandbox_client.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
+    pprint(live_client.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
     # Check if justgiving donation page exist
-    pprint(sandbox_client.fundraising.fundraising_page_url_check('micwong'))
+    pprint(live_client.fundraising.fundraising_page_url_check('micwong'))
