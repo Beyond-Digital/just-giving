@@ -13,7 +13,7 @@ class JustGivingAPI(object):
 
 
 class BaseAPIClient(object):
-    base_url = 'https://api.justgiving.com'  # live url
+    base_url = 'https://api.justgiving.com/'  # live url
     # base_url = 'https://api.sandbox.justgiving.com'  # sandbox url
     api_key = None
     api_version = 'v1'
@@ -28,10 +28,12 @@ class BaseAPIClient(object):
         self.set_header(content_type)
 
     def build_url(self):
-        url = self.base_url + self.api_endpoint
-        url = url.replace('[appId]', self.api_key, 1)
-        url = url.replace('[apiVersion]', self.api_version, 1)
-        return url
+        return '{0}/{1}/{2}/{3}'.format(
+            self.base_url,
+            self.api_key,
+            self.api_version,
+            self.api_endpoint,
+        )
 
     def build_authentication(self, email, password):
         code = "{0}:{1}".format(email, password)
@@ -74,23 +76,23 @@ class BaseAPIClient(object):
 class AccountAPIClient(BaseAPIClient):
 
     def get_fundraising_pages_for_user(self, email):
-        self.api_endpoint = '/[appId]/[apiVersion]/account/{0}/pages'.format(
+        self.api_endpoint = '/account/{0}/pages'.format(
             email)
         return self.get()
 
     def get_donations_for_user(self, email, password):
         self.build_authentication(email, password)
-        self.api_endpoint = '/[appId]/[apiVersion]/account/donations'
+        self.api_endpoint = 'account/donations'
         return self.get()
 
     def retrieve_account(self, email, password):
         self.build_authentication(email, password)
-        self.api_endpoint = '/[appId]/[apiVersion]/account'
+        self.api_endpoint = 'account'
         return self.get()
 
     def validate(self, email, password):
         data = {"email": email, "password": password}
-        self.api_endpoint = '/[appId]/[apiVersion]/account/validate'
+        self.api_endpoint = 'account/validate'
         return self.post(data)
 
 
@@ -98,11 +100,11 @@ class FundraisingAPIClient(BaseAPIClient):
 
     def get_fundraising_pages(self, email, password):
         self.build_authentication(email, password)
-        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages'
+        self.api_endpoint = 'fundraising/pages'
         return self.get()
 
     def get_fundraising_page_details(self, page_short_name):
-        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}'.format(
+        self.api_endpoint = 'fundraising/pages/{0}'.format(
             page_short_name)
         return self.get()
 
@@ -111,13 +113,12 @@ class FundraisingAPIClient(BaseAPIClient):
         if email and password:
             self.build_authentication(email, password)
 
-        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}/donations?pageNum={1}&pageSize={2}'.format(
+        self.api_endpoint = 'fundraising/pages/{0}/donations?pageNum={1}&pageSize={2}'.format(
             page_short_name, page_num, page_size)
         return self.get()
 
     def fundraising_page_url_check(self, page_short_name):
-
-        self.api_endpoint = '/[appId]/[apiVersion]/fundraising/pages/{0}'.format(
+        self.api_endpoint = 'fundraising/pages/{0}'.format(
             page_short_name)
         return self.head()
 
