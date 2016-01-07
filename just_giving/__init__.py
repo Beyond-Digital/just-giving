@@ -2,6 +2,10 @@ import requests
 import base64
 
 
+class JustGivingError(Exception):
+    pass
+
+
 class JustGivingAPI(object):
     api_id = None
 
@@ -12,15 +16,15 @@ class JustGivingAPI(object):
 
 class BaseAPIClient(object):
     base_url = 'https://api.justgiving.com'
-    api_key = None
+    app_id = None
     api_version = 'v1'
     api_endpoint = None
     authentication_code = None
     headers = None
     content_type = None
 
-    def __init__(self, api_key, sandbox=False):
-        self.api_key = api_key
+    def __init__(self, app_id, sandbox=False):
+        self.app_id = app_id
         self.set_header()
 
         if sandbox:
@@ -29,7 +33,7 @@ class BaseAPIClient(object):
     def build_url(self):
         return '{0}/{1}/{2}/{3}'.format(
             self.base_url,
-            self.api_key,
+            self.app_id,
             self.api_version,
             self.api_endpoint,
         )
@@ -49,7 +53,12 @@ class BaseAPIClient(object):
 
     def get(self):
         response = requests.get(self.build_url(), headers=self.headers)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except Exception:
+            raise JustGivingError(
+                'Just Giving - {}'.format(response.status_code)
+            )
         return response.json()
 
     def post(self, data):
@@ -58,7 +67,12 @@ class BaseAPIClient(object):
             headers=self.headers,
             json=data,
         )
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except Exception:
+            raise JustGivingError(
+                'Just Giving - {}'.format(response.status_code)
+            )
         return response.json()
 
     def head(self):
@@ -118,5 +132,10 @@ class FundraisingAPIClient(BaseAPIClient):
         if response.status_code == 404:
             return False
         else:
-            response.raise_for_status()
-            return True
+            try:
+                response.raise_for_status()
+            except Exception:
+                raise JustGivingError(
+                    'Just Giving - {}'.format(response.status_code)
+                )
+        return True
