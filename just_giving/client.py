@@ -67,7 +67,6 @@ class BaseAPIClient(object):
         response.raise_for_status()
         return response.json()
 
-
     def head(self):
         return requests.head(self.build_url(), headers=self.headers)
 
@@ -75,8 +74,7 @@ class BaseAPIClient(object):
 class AccountAPIClient(BaseAPIClient):
 
     def get_fundraising_pages_for_user(self, email):
-        self.api_endpoint = '/account/{0}/pages'.format(
-            email)
+        self.api_endpoint = '/account/{0}/pages'.format(email)
         return self.get()
 
     def get_donations_for_user(self, email, password):
@@ -103,22 +101,26 @@ class FundraisingAPIClient(BaseAPIClient):
         return self.get()
 
     def get_fundraising_page_details(self, page_short_name):
-        self.api_endpoint = 'fundraising/pages/{0}'.format(
-            page_short_name)
+        self.api_endpoint = 'fundraising/pages/{0}'.format(page_short_name)
         return self.get()
 
     # If email and password not set, retunrs public data only
-    def get_fundraising_page_donations(self, page_short_name, page_num=1, page_size=25, email=None, password=None):
+    def get_fundraising_page_donations(
+        self,
+        page_name, page_num=1, page_size=25, email=None, password=None
+    ):
         if email and password:
             self.build_authentication(email, password)
+        query_string = 'pageNum={0}&pageSize={1}'.format(page_num, page_size)
+        self.api_endpoint = 'fundraising/pages/{0}/donations?{1}'.format(
+            page_name,
+            query_string,
 
-        self.api_endpoint = 'fundraising/pages/{0}/donations?pageNum={1}&pageSize={2}'.format(
-            page_short_name, page_num, page_size)
+        )
         return self.get()
 
     def fundraising_page_url_check(self, page_short_name):
-        self.api_endpoint = 'fundraising/pages/{0}'.format(
-            page_short_name)
+        self.api_endpoint = 'fundraising/pages/{0}'.format(page_short_name)
         return self.head()
 
 if __name__ == '__main__':
@@ -126,13 +128,13 @@ if __name__ == '__main__':
     appID = '196e4994'
     j = JustGivingAPI(appID)
     # SAMPLE Check if test account exist
-    print j.account.validate('ching.leung@bynd.com', 'oaktree99')
+    pprint(j.account.validate('ching.leung@bynd.com', 'oaktree99'))
     # SAMPLE GET fundraising page
-    # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
+    # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')  # noqa
     # SAMPLE GET fundraising page deatils
-    #pprint(j.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
+    # pprint(j.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
     # SAMPLE read donations on one particalar page, with page size of 150
     # result
-    #print j.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150)
+    # pprint(j.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
     # Check if justgiving donation page exist
     # print j.fundraising.fundraising_page_url_check('micwong')
