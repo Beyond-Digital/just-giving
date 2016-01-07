@@ -1,5 +1,4 @@
 import requests
-import json
 import base64
 
 
@@ -63,7 +62,7 @@ class BaseAPIClient(object):
         response = requests.post(
             self.build_url(),
             headers=self.headers,
-            data=json.dumps(data)
+            json=data,
         )
         response.raise_for_status()
         return response.json()
@@ -127,11 +126,11 @@ if __name__ == '__main__':
     appID = '196e4994'
     j = JustGivingAPI(appID)
     # SAMPLE Check if test account exist
-    # print j.account.validate('ching.leung@bynd.com', 'oaktree99')
+    print j.account.validate('ching.leung@bynd.com', 'oaktree99')
     # SAMPLE GET fundraising page
     # print j.fundraising.get_fundraising_pages('ching.leung@bynd.com', 'oaktree99')
     # SAMPLE GET fundraising page deatils
-    pprint(j.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
+    #pprint(j.fundraising.get_fundraising_page_details('Nicholas-Jones16'))
     # SAMPLE read donations on one particalar page, with page size of 150
     # result
     #print j.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150)
