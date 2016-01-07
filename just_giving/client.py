@@ -2,6 +2,10 @@ import requests
 import base64
 
 
+class PageShortNameFound(Exception):
+    pass
+
+
 class JustGivingAPI(object):
     api_id = None
 
@@ -62,7 +66,8 @@ class BaseAPIClient(object):
         return response.json()
 
     def head(self):
-        return requests.head(self.build_url(), headers=self.headers)
+        response = requests.head(self.build_url(), headers=self.headers)
+        return response
 
 
 class AccountAPIClient(BaseAPIClient):
@@ -99,13 +104,13 @@ class FundraisingAPIClient(BaseAPIClient):
         return self.get()
 
     # If email and password not set, retunrs public data only
-    def get_fundraising_page_donations(self, page_name, page_num=1, page_size=25, email=None, password=None):  # noqa
+    def get_fundraising_page_donations(self, page_short_name, page_num=1, page_size=25, email=None, password=None):  # noqa
         if email and password:
             self.build_authentication(email, password)
 
         query_string = 'pageNum={0}&pageSize={1}'.format(page_num, page_size)
         self.api_endpoint = 'fundraising/pages/{0}/donations?{1}'.format(
-            page_name,
+            page_short_name,
             query_string,
 
         )
@@ -113,7 +118,12 @@ class FundraisingAPIClient(BaseAPIClient):
 
     def fundraising_page_url_check(self, page_short_name):
         self.api_endpoint = 'fundraising/pages/{0}'.format(page_short_name)
-        return self.head()
+        response = self.head()
+        if response.status_code == 404:
+            return False
+        else:
+            response.raise_for_status()
+            return True
 
 if __name__ == '__main__':
     from pprint import pprint
@@ -130,4 +140,4 @@ if __name__ == '__main__':
     # result
     pprint(live_client.fundraising.get_fundraising_page_donations('Nicholas-Jones16', 1, 150))  # noqa
     # Check if justgiving donation page exist
-    pprint(live_client.fundraising.fundraising_page_url_check('micwong'))
+    pprint(live_client.fundraising.fundraising_page_url_check('micwonglololol'))
