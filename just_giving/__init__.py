@@ -117,7 +117,6 @@ class FundraisingAPIClient(BaseAPIClient):
     def get_fundraising_page_donations(self, page_short_name, page_num=1, page_size=25, email=None, password=None):  # noqa
         if email and password:
             self.build_authentication(email, password)
-
         query_string = 'pageNum={0}&pageSize={1}'.format(page_num, page_size)
         self.api_endpoint = 'fundraising/pages/{0}/donations?{1}'.format(
             page_short_name,
